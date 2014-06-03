@@ -29,6 +29,9 @@ config BR2_GLIBC_VERSION_2_18
 config BR2_GLIBC_VERSION_2_19
 	bool "2.19"
 
+config BR2_GLIBC_VERSION_2_13
+	bool "2.13"
+
 endchoice
 
 endif
@@ -39,3 +42,4 @@ config BR2_GLIBC_VERSION_STRING
 	default "2.19-svnr25243" if BR2_EGLIBC_VERSION_2_19
 	default "2.18" if BR2_GLIBC_VERSION_2_18
 	default "2.19" if BR2_GLIBC_VERSION_2_19
+	default "2.13" if BR2_GLIBC_VERSION_2_13

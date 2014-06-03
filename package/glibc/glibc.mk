@@ -19,6 +19,10 @@ endif
 GLIBC_LICENSE = GPLv2+ (programs), LGPLv2.1+, BSD-3c, MIT (library)
 GLIBC_LICENSE_FILES = $(addprefix $(GLIBC_SRC_SUBDIR)/,COPYING COPYING.LIB LICENSES)
 
+ifeq ($(findstring 2.13,$(GLIBC_VERSION)),2.13)
+GLIBC_CONF_OPTIONS += libc_cv_c_cleanup=yes
+endif
+
 # glibc is part of the toolchain so disable the toolchain dependency
 GLIBC_ADD_TOOLCHAIN_DEPENDENCY = NO
 
@@ -78,6 +82,7 @@ define GLIBC_CONFIGURE_CMDS
 		CXXFLAGS="-O2 $(GLIBC_EXTRA_CFLAGS)" \
 		$(SHELL) $(@D)/$(GLIBC_SRC_SUBDIR)/configure \
 		ac_cv_path_BASH_SHELL=/bin/bash \
+		$(GLIBC_CONF_OPTIONS) \
 		libc_cv_forced_unwind=yes \
 		--target=$(GNU_TARGET_NAME) \
 		--host=$(GNU_TARGET_NAME) \
