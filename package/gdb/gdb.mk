@@ -72,6 +72,13 @@ GDB_CONF_OPT = \
 	--without-included-gettext \
 	--disable-werror
 
+ifeq ($(BR2_PACKAGE_PYTHON),y)
+GDB_DEPENDENCIES += python
+GDB_CONF_OPT += \
+	--with-python
+GDB_CONF_ENV += CFLAGS="$(TARGET_CFLAGS) $(shell $(PKG_CONFIG_HOST_BINARY) --cflags-only-I python)"
+endif
+
 # This removes some unneeded Python scripts and XML target description
 # files that are not useful for a normal usage of the debugger.
 define GDB_REMOVE_UNNEEDED_FILES
@@ -112,6 +119,11 @@ HOST_GDB_CONF_OPT = \
 	--disable-werror \
 	--without-included-gettext \
 	--disable-sim
+
+ifeq ($(BR2_PACKAGE_PYTHON),y)
+HOST_GDB_CONF_OPT += \
+	--with-python
+endif
 
 ifeq ($(GDB_FROM_GIT),y)
 HOST_GDB_DEPENDENCIES += host-texinfo
