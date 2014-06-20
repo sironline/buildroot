@@ -1,0 +1,45 @@
+################################################################################
+#
+# instrumentation
+#
+################################################################################
+
+INSTRUMENTATION_VERSION = 1.0
+INSTRUMENTATION_SITE = $(TOPDIR)/package/instrumentation/src
+INSTRUMENTATION_SITE_METHOD = local
+INSTRUMENTATION_LICENSE = GPLv2
+
+INSTRUMENTATION_INSTALL_STAGING = YES
+
+INSTRUMENTATION_CPPFLAGS = $(TARGET_CPPFLAGS) -I$(STAGING_DIR)/../include/c++/$(BR2_GCC_VERSION) -I$(STAGING_DIR)/../include/c++/$(BR2_GCC_VERSION)/$(GNU_TARGET_NAME) -I$(STAGING_DIR)/usr/include -D_GNU_SOURCE
+INSTRUMENTATION_CFLAGS = $(TARGET_CFLAGS) -finstrument-functions
+INSTRUMENTATION_CXXFLAGS = $(TARGET_CXXFLAGS) -finstrument-functions
+INSTRUMENTATION_LDFLAGS = $(TARGET_LDFLAGS)
+
+define INSTRUMENTATION_CONFIGURE_CMDS
+endef
+
+define INSTRUMENTATION_BUILD_CMDS
+	$(TARGET_MAKE_ENV) \
+	$(MAKE) \
+	AR="$(TARGET_AR)" \
+	CC="$(TARGET_CC)" \
+	LD="$(TARGET_LD)" \
+	CPPFLAGS="$(INSTRUMENTATION_CPPFLAGS)" \
+	CFLAGS="$(INSTRUMENTATION_CFLAGS)" \
+	CXXFLAGS="$(INSTRUMENTATION_CXXFLAGS)" \
+	LDFLAGS="$(INSTRUMENTATION_LDFLAGS)" \
+	-C $(@D)
+endef
+
+define INSTRUMENTATION_INSTALL_STAGING_CMDS
+	$(INSTALL) -D -m 0755 $(@D)/lib*.a $(STAGING_DIR)/usr/lib
+endef
+
+define INSTRUMENTATION_INSTALL_TARGET_CMDS
+endef
+
+define INSTRUMENTATION_UNINSTALL_TARGET_CMDS
+endef
+
+$(eval $(generic-package))
